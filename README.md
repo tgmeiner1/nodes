@@ -1,2 +1,5 @@
 # UCSD Selector Nodes
-index is node 0
+
+Terry Feng
+
+I am working on node 4
