@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Node 1</title>
+    <meta name="description" content="Infinite Superposition">
+    <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+    <script src="js/aframe-environment-component.min.js"></script>
+    <script src="js/link-controls.js"></script>
+
+    <!-- <script src="https://cdn.rawgit.com/matthewbryancurtis/aframe-star-system-component/db4f1030/index.js"></script> -->
+    <!-- <script src="https://unpkg.com/aframe-template-component@^3.1.1/dist/aframe-template-component.min.js"></script> -->
+    <!-- <script src="https://unpkg.com/aframe-animation-component@^4.1.2/dist/aframe-animation-component.min.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/resonance-audio/build/resonance-audio.min.js"></script> -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/aframe-resonance-audio-component@1.0.0/dist/aframe-resonance-audio-component.min.js">
+        </script>
+    <script src="https://unpkg.com/aframe-audio-analyser@1.0.0/dist/aframe-audio-analyser.umd.js">
+    </script>
+    <script
+        src="https://unpkg.com/aframe-entity-generator-component@^3.0.0/dist/aframe-entity-generator-component.min.js">
+        </script>
+    <script src="https://unpkg.com/aframe-layout-component@4.3.1/dist/aframe-layout-component.min.js">
+    </script>
+
+    <script src="js/audioanalyser-levels-scale.js"></script>
+    <script src="js/scale-y-color.js"></script>
+
+</head>
+
+<body>
+    <!-- cursor activated from mouse position; only intersects objects with "link" component added (the <a-link> tag) -->
+    <a-scene
+        environment="preset: checkerboard; groundTexture: walkernoise; dressing: trees; dressingAmount: 0; grid: crosses;"
+        cursor="rayOrigin: mouse;" raycaster="far: 100; objects: [link];">
+
+        <a-assets timeout="10000">
+            <!-- load analyzer -->
+            <a-mixin id="bar" geometry="primitive: box" material="color: white"
+                scale-y-color="from: 50 50 50; to: 200 200 200; maxScale: 20"></a-mixin>
+
+            <!-- load audio assets -->
+            <audio id="mel1" preload="auto" autoplay="true" loop="true" src="snd/n0/stem_session_melody_1.mp3"></audio>
+            <audio id="mel2" preload="auto" autoplay="true" loop="true" src="snd/n0/stem_session_melody_2.mp3"></audio>
+            <audio id="solo" preload="auto" autoplay="true" loop="true" src="snd/n0/stem_session_solo.mp3"></audio>
+            <audio id="vox1" preload="auto" autoplay="true" loop="true" src="snd/n0/stem_session_vox_1.mp3"></audio>
+            <audio id="vox2" preload="auto" autoplay="true" loop="true" src="snd/n0/stem_session_vox_2.mp3"></audio>
+            <audio id="vox3" preload="auto" autoplay="true" loop="true" src="snd/n0/stem_session_vox_3.mp3"></audio>
+            <!-- note chords are not spatial, they are passed to visualizer instead-->
+            <audio id="chords" preload="auto" autoplay="true" loop="true" src="snd/n0/stem_session_chords.mp3"></audio>
+
+            <!-- load image assets -->
+            <img id="previewEgypt" src="img/spherical/egypt.jpg">
+            <img id="previewArches" src="img/spherical/arches.jpg">
+        </a-assets>
+
+        <!-- Play Audio -->
+        <a-resonance-audio-room position="0 2 0" width="4" height="4" depth="4" ambisonic-order="3" speed-of-sound="343"
+            visualize="true">
+            <a-resonance-audio-src id="my-src" position="2 2 0" src="#mel1" loop="true" autoplay="true"
+                visualize="false">
+            </a-resonance-audio-src>
+            <a-resonance-audio-src id="my-src2" position="0 2 2" src="#mel2" loop="true" autoplay="true"
+                visualize="false">
+            </a-resonance-audio-src>
+            <a-resonance-audio-src id="my-src3" position="2 0 2" src="#solo" loop="true" autoplay="true"
+                visualize="false">
+            </a-resonance-audio-src>
+            <a-resonance-audio-src id="my-src4" position="2 0 0" src="#vox1" loop="true" autoplay="true"
+                visualize="false">
+            </a-resonance-audio-src>
+            <a-resonance-audio-src id="my-src5" position="2 0 0" src="#vox2" loop="true" autoplay="true"
+                visualize="false">
+            </a-resonance-audio-src>
+            <a-resonance-audio-src id="my-src6" position="1 1 0" src="#vox3" loop="true" autoplay="true"
+                visualize="false">
+            </a-resonance-audio-src>
+        </a-resonance-audio-room>
+
+        <!-- create orbiting sphere -->
+        <a-entity rotation="0 0 0" animation="property: rotation; to: 360 720 -360; loop: true; dur: 30000">
+            <!-- the translation is effeectively the radius of the rotation -->
+            <a-sphere position="20 0 0" color="grey"></a-sphere>
+            <a-sphere position="0 30 0" color="black"></a-sphere>
+            <a-sphere position="0 0 30" color="white"></a-sphere>
+        </a-entity>
+        <!-- <a-sphere id="origin" radius="0.25" position="0 0 0" color="white"></a-sphere> -->
+
+        <!-- Visualizer -->
+        <a-entity audioanalyser="src: #chords; smoothingTimeConstant: 0.8"
+            audioanalyser-levels-scale="max: 50; multiplier: 0.08" entity-generator="mixin: bar; num: 128"
+            layout="type: circle; radius: 15; angle: 10; plane: xz;"></a-entity>
+
+        <!-- display portals -->
+        <a-link position="-3 1.6 -5" rotation="0 20 0" href="node1.html" title="Node 1" image="#previewEgypt"></a-link>
+        <a-link position="3 1.6 -5" rotation="0 -20 0" href="node2.html" title="Node 2" image="#previewArches"></a-link>
+
+    </a-scene>
+
+</body>
+
+</html>
